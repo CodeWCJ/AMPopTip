@@ -124,7 +124,7 @@ class ViewController: UIViewController {
     switch button {
     case .topLeft:
       popTip.bubbleColor = UIColor(red: 0.95, green: 0.65, blue: 0.21, alpha: 1)
-      popTip.cornerRadius = 10
+      popTip.corner_radius = 10
       if !showSwiftUIView {
         let customView = UIView(frame: CGRect(x: 0, y: 0, width: 80, height: 120))
         let imageView = UIImageView(image: UIImage(named: "comment"))

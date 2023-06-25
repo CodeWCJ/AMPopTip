@@ -121,21 +121,21 @@ open class PopTip: UIView {
   /// The `CALayer` generator closure for poptip's sublayer 0. If nil, the bubbleColor will be used as solid fill
   @objc open dynamic var bubbleLayerGenerator: ((_ path: UIBezierPath) -> CALayer?)?
   /// The `UIColor` for the poptip's border
-  @objc open dynamic var borderColor = UIColor.clear
+  @objc open dynamic var border_color = UIColor.clear
   /// The width for the poptip's border
-  @objc open dynamic var borderWidth = CGFloat(0.0)
+  @objc open dynamic var border_width = CGFloat(0.0)
   /// The `Double` with the poptip's border radius
-  @objc open dynamic var cornerRadius = CGFloat(4.0)
+  @objc open dynamic var corner_radius = CGFloat(4.0)
   /// The `BOOL` that determines wether the poptip is rounded. If set to `true` the radius will equal `frame.height / 2`
   @objc open dynamic var isRounded = false
   /// The `UIColor` with the poptip's shadow color
-  @objc open dynamic var shadowColor: UIColor = .clear
+  @objc open dynamic var shadow_color: UIColor = .clear
   /// The `CGSize` with the poptip's shadow offset
-  @objc open dynamic var shadowOffset: CGSize = .zero
+  @objc open dynamic var shadow_offset: CGSize = .zero
   /// The `Float` with the poptip's shadow radius
-  @objc open dynamic var shadowRadius: Float = 0
+  @objc open dynamic var shadow_radius: Float = 0
   /// The `Float` with the poptip's shadow opacity
-  @objc open dynamic var shadowOpacity: Float = 0
+  @objc open dynamic var shadow_opacity: Float = 0
   /// Holds the offset between the poptip and origin
   @objc open dynamic var offset = CGFloat(0.0)
   /// Holds the CGFloat with the padding used for the inner text
@@ -298,7 +298,7 @@ open class PopTip: UIView {
     }
 
     // Constraint the offset in the boundaries of the bubble, maintaining the sign (hence the arrowOffset / arrowOffset)
-    let constrainedArrowOffset = abs(arrowOffset) > (frame.size.width / 2) ? ((arrowOffset / arrowOffset) * (frame.size.width / 2 - cornerRadius * 2)) : arrowOffset
+    let constrainedArrowOffset = abs(arrowOffset) > (frame.size.width / 2) ? ((arrowOffset / arrowOffset) * (frame.size.width / 2 - corner_radius * 2)) : arrowOffset
     // Make sure that the bubble doesn't leave the boundaries of the view
     var arrowPosition = CGPoint(
       x: from.origin.x + from.width / 2 - frame.origin.x - constrainedArrowOffset,
@@ -307,7 +307,6 @@ open class PopTip: UIView {
 
     if bubbleOffset > 0 && arrowPosition.x < bubbleOffset {
       bubbleOffset = arrowPosition.x - arrowSize.width
-        
     } else if bubbleOffset < 0 && frame.width < abs(bubbleOffset) {
       bubbleOffset = -(arrowPosition.x - arrowSize.width)
     } else if bubbleOffset < 0 && (frame.origin.x - arrowPosition.x) < abs(bubbleOffset) {
@@ -326,7 +325,7 @@ open class PopTip: UIView {
       }
     }
     frame.origin.x += bubbleOffset
-    frame.size = CGSize(width: frame.width + borderWidth * 2, height: frame.height + borderWidth * 2)
+    frame.size = CGSize(width: frame.width + border_width * 2, height: frame.height + border_width * 2)
 
     // Only when the tip is not constrained, make sure to center the frame if the containerView is smaller than the tip
     if containerView.frame.width < frame.width, !constrainInContainerView {
@@ -364,7 +363,7 @@ open class PopTip: UIView {
     frame.origin = CGPoint(x: x, y: y)
 
     // Constraint the offset in the boundaries of the bubble, maintaining the sign (hence the arrowOffset / arrowOffset)
-    let constrainedArrowOffset = abs(arrowOffset) > (frame.size.height / 2) ? ((arrowOffset / arrowOffset) * (frame.size.height / 2  - cornerRadius * 2)) : arrowOffset
+    let constrainedArrowOffset = abs(arrowOffset) > (frame.size.height / 2) ? ((arrowOffset / arrowOffset) * (frame.size.height / 2  - corner_radius * 2)) : arrowOffset
     // Make sure that the bubble doesn't leave the boundaries of the view
     let arrowPosition = CGPoint(
       x: direction == .left ? from.origin.x - frame.origin.x + offset : from.origin.x + from.width - frame.origin.x + offset,
@@ -389,7 +388,7 @@ open class PopTip: UIView {
     }
 
     frame.origin.y += bubbleOffset
-    frame.size = CGSize(width: frame.width + borderWidth * 2, height: frame.height + borderWidth * 2)
+    frame.size = CGSize(width: frame.width + border_width * 2, height: frame.height + border_width * 2)
 
     return (frame, arrowPosition)
   }
@@ -498,7 +497,7 @@ open class PopTip: UIView {
       layer.anchorPoint = CGPoint(x: 0, y: anchor)
       layer.position = CGPoint(x: layer.position.x + rect.width / 2, y: layer.position.y + rect.height * anchor)
     case .none:
-      rect.size = CGSize(width: textBounds.width + padding * 2.0 + edgeInsets.horizontal + borderWidth * 2, height: textBounds.height + padding * 2.0 + edgeInsets.vertical + borderWidth * 2)
+      rect.size = CGSize(width: textBounds.width + padding * 2.0 + edgeInsets.horizontal + border_width * 2, height: textBounds.height + padding * 2.0 + edgeInsets.vertical + border_width * 2)
       rect.origin = CGPoint(x: from.midX - rect.size.width / 2, y: from.midY - rect.height / 2)
       rect = rectContained(rect: rect)
       arrowPosition = CGPoint.zero
@@ -553,15 +552,15 @@ open class PopTip: UIView {
   open override func draw(_ rect: CGRect) {
     if isRounded {
       let showHorizontally = direction == .left || direction == .right
-      cornerRadius = (frame.size.height - (showHorizontally ? 0 : arrowSize.height)) / 2
+        corner_radius = (frame.size.height - (showHorizontally ? 0 : arrowSize.height)) / 2
     }
 
-    let path = PopTip.pathWith(rect: rect, frame: frame, direction: direction, arrowSize: arrowSize, arrowPosition: arrowPosition, arrowRadius: arrowRadius, borderWidth: borderWidth, radius: cornerRadius)
+    let path = PopTip.pathWith(rect: rect, frame: frame, direction: direction, arrowSize: arrowSize, arrowPosition: arrowPosition, arrowRadius: arrowRadius, borderWidth: border_width, radius: corner_radius)
 
-    layer.shadowOpacity = shadowOpacity
-    layer.shadowRadius = CGFloat(shadowRadius)
-    layer.shadowOffset = shadowOffset
-    layer.shadowColor = shadowColor.cgColor
+    layer.shadowOpacity = shadow_opacity
+    layer.shadowRadius = CGFloat(shadow_radius)
+    layer.shadowOffset = shadow_offset
+    layer.shadowColor = shadow_color.cgColor
 
     if let bubbleLayerGenerator = self.bubbleLayerGenerator, let bubbleLayer = bubbleLayerGenerator(path) {
       self.bubbleLayer = bubbleLayer
@@ -572,8 +571,8 @@ open class PopTip: UIView {
       path.fill()
     }
 
-    borderColor.setStroke()
-    path.lineWidth = borderWidth
+    border_color.setStroke()
+    path.lineWidth = border_width
     path.stroke()
 
     paragraphStyle.alignment = textAlignment
@@ -803,7 +802,7 @@ open class PopTip: UIView {
       UIView.animate(withDuration: 0.2, delay: 0, options: [.transitionCrossDissolve, .beginFromCurrentState], animations: {
         self.setup()
 
-        let path = PopTip.pathWith(rect: self.frame, frame: self.frame, direction: self.direction, arrowSize: self.arrowSize, arrowPosition: self.arrowPosition, arrowRadius: self.arrowRadius, borderWidth: self.borderWidth, radius: self.cornerRadius)
+        let path = PopTip.pathWith(rect: self.frame, frame: self.frame, direction: self.direction, arrowSize: self.arrowSize, arrowPosition: self.arrowPosition, arrowRadius: self.arrowRadius, borderWidth: self.border_width, radius: self.corner_radius)
 
         let shadowAnimation = CABasicAnimation(keyPath: "shadowPath")
         shadowAnimation.duration = 0.2
